@@ -1,0 +1,9 @@
+IO
+
+AVL
+    Arvore Pacientes
+    Arvore de Espera
+
+No
+
+Paciente (nome: char[], id: int)
