@@ -11,9 +11,12 @@ struct Avl
     int profundidade;
 
     int (*comparar)(void *a, void *b);
+    void (*imprimir)(void *valor);
+    void (*apagar)(void *valor);
+    void *(*get_chave)(void *valor);
 };
 
-AVL *avl_criar(int (*comparar)(void *a, void *b))
+AVL *avl_criar(int (*comparar)(void *a, void *b), void (*imprimir)(void *valor), void (*apagar)(void *valor), void *(*get_chave)(void *valor))
 {
     AVL *avl = (AVL *)malloc(sizeof(AVL));
     if (avl != NULL)
@@ -21,8 +24,42 @@ AVL *avl_criar(int (*comparar)(void *a, void *b))
         avl->raiz = NULL;
         avl->profundidade = -1;
         avl->comparar = comparar;
+        avl->imprimir = imprimir;
+        avl->apagar = apagar;
+        avl->get_chave = get_chave;
     }
     return avl;
+}
+
+void avl_set_raiz(AVL* avl, NO* no){
+    if(avl == NULL) return;
+
+    avl->raiz = no;
+}
+
+void avl_troca_maximo_esquerda(AVL *avl, NO *troca, NO *raiz, NO *anterior)
+{
+    if (no_get_direita(troca) != NULL)
+    {
+        avl_troca_maximo_esquerda(avl, no_get_direita(troca), raiz, troca);
+    }
+    else
+    {
+
+        if (raiz == anterior)
+        {
+            no_set_esquerda(anterior, no_get_esquerda(troca));
+        }
+        else
+        {
+            no_set_direita(anterior, no_get_esquerda(troca));
+        }
+
+        void *valor_raiz = no_get_valor(raiz);
+        no_set_valor(raiz, no_get_valor(troca));
+        avl->apagar(&valor_raiz);
+        no_remover(&troca);
+    }
 }
 
 void avl_apagar_auxiliar(NO *no)
@@ -100,10 +137,10 @@ NO *rodar_esquerda_direita(NO *a)
 NO *rodar_direita_esquerda(NO *a)
 {
     no_set_direita(a, rodar_direita(no_get_direita(a)));
-    return rodar_direita(a);
+    return rodar_esquerda(a);
 }
 
-NO *avl_inserir_auxiliar(AVL* avl, NO *no, void *valor)
+NO *avl_inserir_auxiliar(AVL *avl, NO *no, void *valor)
 {
     printf("Inserindo valor auxiliar: %d\n", *(int *)valor);
 
@@ -128,10 +165,12 @@ NO *avl_inserir_auxiliar(AVL* avl, NO *no, void *valor)
     no_set_altura(no, 1 + max(no_get_altura(no_get_esquerda(no)), no_get_altura(no_get_direita(no))));
 
     int fb = no_calcular_fator_balanceamento(no);
+    printf("\tFator de balanceamento do nó %d: %d\n", *(int *)no_get_valor(no), fb);
 
     if (fb == -2)
     {
-        if (no_calcular_fator_balanceamento(no_get_esquerda(no)) <= 0)
+        printf("\tfb filho esquerdo: %d\n", no_calcular_fator_balanceamento(no_get_esquerda(no)));
+        if (no_calcular_fator_balanceamento(no_get_esquerda(no)) < 0)
         {
             printf("\tRotação Esquerda\n");
             no = rodar_esquerda(no);
@@ -145,7 +184,8 @@ NO *avl_inserir_auxiliar(AVL* avl, NO *no, void *valor)
 
     if (fb == 2)
     {
-        if (no_calcular_fator_balanceamento(no_get_direita(no)) >= 0)
+        int fb_direita = no_calcular_fator_balanceamento(no_get_direita(no));
+        if (fb_direita > 0)
         {
             printf("\tRotação Direita\n");
             no = rodar_direita(no);
@@ -174,18 +214,108 @@ NO *avl_inserir(AVL *avl, void *valor)
     return avl->raiz;
 }
 
-void avl_imprimir_auxiliar(NO *no)
+bool avl_buscar_auxiliar(AVL *avl, NO *raiz, void *valor)
+{
+    if (raiz == NULL)
+        return false;
+
+    int cmp = avl->comparar(valor, no_get_valor(raiz));
+
+    if (cmp == 0)
+        return true;
+    else if (cmp < 0)
+        return avl_buscar_auxiliar(avl, no_get_esquerda(raiz), valor);
+    else
+        return avl_buscar_auxiliar(avl, no_get_direita(raiz), valor);
+}
+
+bool avl_buscar(AVL *avl, void *valor)
+{
+    if (avl == NULL || valor == NULL)
+        return false;
+
+    return avl_buscar_auxiliar(avl, avl->raiz, valor);
+}
+
+void avl_imprimir_auxiliar(AVL *avl, NO *no)
 {
     if (no == NULL)
         return;
 
-    avl_imprimir_auxiliar(no_get_esquerda(no));
-    printf("%d ", *(int *)no_get_valor(no));
-    avl_imprimir_auxiliar(no_get_direita(no));
+    avl_imprimir_auxiliar(avl, no_get_esquerda(no));
+    avl->imprimir(no_get_valor(no));
+    printf("\t%d\n\n", no_get_altura(no));
+    avl_imprimir_auxiliar(avl, no_get_direita(no));
 }
 
 void avl_imprimir(AVL *avl)
 {
-    avl_imprimir_auxiliar(avl->raiz);
+    avl_imprimir_auxiliar(avl, avl->raiz);
     printf("\n");
+}
+
+NO *avl_remover_auxiliar(AVL *avl, NO *raiz, void *id)
+{
+    NO *p;
+
+    if (raiz == NULL)
+        return NULL;
+
+    if (avl->comparar(id, avl->get_chave(no_get_valor(raiz))) == 0)
+    {
+        if (no_get_esquerda(raiz) == NULL || no_get_direita(raiz) == NULL)
+        {
+            p = raiz;
+            if (no_get_esquerda(raiz) == NULL)
+            {
+                raiz = no_get_direita(raiz);
+            }
+            else
+            {
+                raiz = no_get_esquerda(raiz);
+            }
+
+            avl->apagar(no_get_valor(p));
+            no_remover(&p);
+        }
+        else
+        {
+            avl_troca_maximo_esquerda(avl, no_get_esquerda(raiz), raiz, raiz);
+        }
+    }
+    else if (avl->comparar(id, avl->get_chave(no_get_valor(raiz))) == -1)
+    {
+        no_set_esquerda(raiz, avl_remover_auxiliar(avl, no_get_esquerda(raiz), id));
+    } else if(avl->comparar(id, avl->get_chave(no_get_valor(raiz))) == 1){
+        no_set_direita(raiz, avl_remover_auxiliar(avl, no_get_direita(raiz), id));
+    }
+
+    if(raiz != NULL){
+        no_atualizar_altura(raiz);
+        int fb = no_calcular_fator_balanceamento(raiz);
+        if(fb == -2){
+            if(no_calcular_fator_balanceamento(no_get_direita(raiz)) < 0){
+                raiz = rodar_esquerda(raiz);
+            } else {
+                raiz = rodar_direita_esquerda(raiz);
+            }
+        } else if (fb == 2){
+            if(no_calcular_fator_balanceamento(no_get_esquerda(raiz)) > 0){
+                raiz = rodar_direita(raiz);
+            } else {
+                raiz = rodar_esquerda_direita(raiz);
+            }
+        }
+    }
+    return raiz;
+}
+
+bool avl_remover(AVL* avl, void* id){
+    NO* raiz = avl_get_raiz(avl);
+
+    printf("id: %d\n", id);
+
+    avl_set_raiz(avl, avl_remover_auxiliar(avl, raiz, id));
+
+    return avl_get_raiz(avl) != NULL;
 }

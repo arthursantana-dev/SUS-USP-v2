@@ -2,6 +2,9 @@
     "files.associations": {
         "stdlib.h": "c",
         "avl.h": "c",
-        "no.h": "c"
+        "no.h": "c",
+        "stdbool.h": "c",
+        "avl_pacientes.h": "c",
+        "paciente.h": "c"
     }
 }
