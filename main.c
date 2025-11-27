@@ -2,9 +2,9 @@
 #include "no/no.h"
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "avl_pacientes/avl_pacientes.h"
 #include "paciente/paciente.h"
+
 
 int comparar_inteiros(void *a, void *b) {
     int int_a = *(int *)a;
@@ -36,8 +36,6 @@ int main()
 
     PACIENTE *p1 = paciente_criar("Alice", 5, 4, true);
 
-    PACIENTE *p2 = paciente_criar("David", 3, 2, false);
-
     avl_pacientes_inserir(ap, p1);
     avl_pacientes_inserir(ap, paciente_criar("Bob", 7, 6, false));
     avl_pacientes_inserir(ap, paciente_criar("Charlie", 6, 5, true));
@@ -45,10 +43,12 @@ int main()
     avl_pacientes_imprimir(ap);
 
     printf("Removendo paciente com ID 5:\n");
-    avl_pacientes_remover(ap, &(int){5});
+    int id_busca = 5;
+    avl_pacientes_remover(ap, id_busca);
 
     avl_pacientes_buscar(ap, 5);
 
+    avl_pacientes_apagar(&ap);
     // // Declaração das variáveis
     // int v1 = 50;
     // int v2 = 25;

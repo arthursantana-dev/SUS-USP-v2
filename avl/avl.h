@@ -7,7 +7,7 @@
 
 typedef struct Avl AVL;
 
-AVL *avl_criar(int (*comparar)(void *a, void *b), void (*imprimir)(void *valor), void (*apagar)(void *valor), int (*get_chave)(void *valor));
+AVL *avl_criar(int (*comparar)(int a, int b), void (*imprimir)(void *valor), void (*apagar)(void *valor), int (*get_chave)(void *valor));
 
 NO* avl_get_raiz(AVL* avl);
 
@@ -17,7 +17,7 @@ NO* avl_inserir(AVL* avl, void* valor);
 
 void avl_apagar(AVL **avl);
 
-bool avl_buscar(AVL *avl, void *valor);
+bool avl_buscar(AVL *avl, int valor);
 
 void avl_imprimir(AVL *avl);
 

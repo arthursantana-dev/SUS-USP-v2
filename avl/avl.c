@@ -10,13 +10,13 @@ struct Avl
     NO *raiz;
     int profundidade;
 
-    int (*comparar)(void *a, void *b);
+    int (*comparar)(int a, int b);
     void (*imprimir)(void *valor);
     void (*apagar)(void *valor);
-    void *(*get_chave)(void *valor);
+    int (*get_chave)(void *valor);
 };
 
-AVL *avl_criar(int (*comparar)(void *a, void *b), void (*imprimir)(void *valor), void (*apagar)(void *valor), int (*get_chave)(void *valor))
+AVL *avl_criar(int (*comparar)(int a, int b), void (*imprimir)(void *valor), void (*apagar)(void *valor), int (*get_chave)(void *valor))
 {
     AVL *avl = (AVL *)malloc(sizeof(AVL));
     if (avl != NULL)
@@ -64,13 +64,15 @@ void avl_troca_maximo_esquerda(AVL *avl, NO *troca, NO *raiz, NO *anterior)
     }
 }
 
-void avl_apagar_auxiliar(NO *no)
+void avl_apagar_auxiliar(AVL* avl,NO *no)
 {
     if (no == NULL)
         return;
 
-    avl_apagar_auxiliar(no_get_esquerda(no));
-    avl_apagar_auxiliar(no_get_direita(no));
+    avl->apagar(no_get_valor(no));
+
+    avl_apagar_auxiliar(avl, no_get_esquerda(no));
+    avl_apagar_auxiliar(avl, no_get_direita(no));
     no_remover(&no);
     free(no);
 }
@@ -79,7 +81,7 @@ void avl_apagar(AVL **avl)
 {
     if (*avl != NULL)
     {
-        avl_apagar_auxiliar((*avl)->raiz);
+        avl_apagar_auxiliar(avl, (*avl)->raiz);
         free(*avl);
         *avl = NULL;
     }
@@ -142,32 +144,32 @@ NO *rodar_direita_esquerda(NO *a)
     return rodar_esquerda(a);
 }
 
-NO *avl_inserir_auxiliar(AVL *avl, NO *no, void *valor)
+NO *avl_inserir_auxiliar(AVL *avl, NO *no, NO* no_a_ser_inserido)
 {
-    printf("Inserindo valor auxiliar: %d\n", *(int *)valor);
+    printf("Inserindo valor auxiliar: %d\n", avl->get_chave(no_get_valor(no_a_ser_inserido)));
 
     if (no == NULL)
     {
         printf("\tFolha\n");
-        no = avl_criar_no(valor);
+        no = no_a_ser_inserido;
     }
-    else if (avl->comparar(valor, no_get_valor(no)) < 0)
+    else if (avl->comparar(avl->get_chave(no_get_valor(no_a_ser_inserido)), avl->get_chave(no_get_valor(no))) < 0)
     {
         printf("\tEsquerda\n");
 
-        no_set_esquerda(no, avl_inserir_auxiliar(avl, no_get_esquerda(no), valor));
+        no_set_esquerda(no, avl_inserir_auxiliar(avl, no_get_esquerda(no), no_a_ser_inserido));
     }
     else
     {
         printf("\tDireita\n");
 
-        no_set_direita(no, avl_inserir_auxiliar(avl, no_get_direita(no), valor));
+        no_set_direita(no, avl_inserir_auxiliar(avl, no_get_direita(no), no_a_ser_inserido));
     }
 
     no_set_altura(no, 1 + max(no_get_altura(no_get_esquerda(no)), no_get_altura(no_get_direita(no))));
 
     int fb = no_calcular_fator_balanceamento(no);
-    printf("\tFator de balanceamento do nó %d: %d\n", *(int *)no_get_valor(no), fb);
+    printf("\tFator de balanceamento do nó %d: %d\n", avl->get_chave(no_get_valor(no)), fb);
 
     if (fb == -2)
     {
@@ -199,7 +201,7 @@ NO *avl_inserir_auxiliar(AVL *avl, NO *no, void *valor)
         }
     }
 
-    printf("\tAltura do nó com valor %d: %d\n", *(int *)no_get_valor(no), no_get_altura(no));
+    printf("\tAltura do nó com valor %d: %d\n", avl->get_chave(no_get_valor(no))), no_get_altura(no);
 
     return no;
 }
@@ -211,17 +213,19 @@ NO *avl_inserir(AVL *avl, void *valor)
 
     printf("Inserindo valor: %d\n", *(int *)valor);
 
-    avl->raiz = avl_inserir_auxiliar(avl, avl->raiz, valor);
+    NO* no_a_ser_inserido = no_criar(valor, NULL, NULL, 0, 0);
+
+    avl->raiz = avl_inserir_auxiliar(avl, avl->raiz, no_a_ser_inserido);
 
     return avl->raiz;
 }
 
-bool avl_buscar_auxiliar(AVL *avl, NO *raiz, void *valor)
+bool avl_buscar_auxiliar(AVL *avl, NO *raiz, int valor)
 {
     if (raiz == NULL)
         return false;
 
-    int cmp = avl->comparar(valor, no_get_valor(raiz));
+    int cmp = avl->comparar(valor, avl->get_chave(no_get_valor(raiz)));
 
     if (cmp == 0)
         return true;
@@ -231,7 +235,7 @@ bool avl_buscar_auxiliar(AVL *avl, NO *raiz, void *valor)
         return avl_buscar_auxiliar(avl, no_get_direita(raiz), valor);
 }
 
-bool avl_buscar(AVL *avl, void *valor)
+bool avl_buscar(AVL *avl, int valor)
 {
     if (avl == NULL || valor == NULL)
         return false;
@@ -256,12 +260,14 @@ void avl_imprimir(AVL *avl)
     printf("\n");
 }
 
-NO *avl_remover_auxiliar(AVL *avl, NO *raiz, void *id)
+NO *avl_remover_auxiliar(AVL *avl, NO *raiz, int id)
 {
     NO *p;
 
     if (raiz == NULL)
         return NULL;
+
+    printf("chave raiz: %d\n", avl->get_chave(no_get_valor(raiz)));
 
     printf("%d\n",avl->comparar(id, avl->get_chave(no_get_valor(raiz))));
 

@@ -5,17 +5,15 @@
 #include "../paciente/paciente.h"
 
 struct Avl_Pacientes {
-    int (*comparar)(void *a, void *b);
+    int (*comparar)(int a, int b);
     void (*imprimir)(void *valor);
     AVL *a;
 };
 
-int comparar_ids(void *a, void *b) {
-    int int_a = paciente_get_id((PACIENTE *)a);
-    int int_b = paciente_get_id((PACIENTE *)b);
+int comparar_ids(int a, int b) {
 
-    if (int_a < int_b) return -1;
-    else if (int_a > int_b) return 1;
+    if (a < b) return -1;
+    else if (a > b) return 1;
     else return 0;
 }
 
@@ -27,7 +25,9 @@ void imprimir_paciente(void *valor) {
 }
 
 int avl_pacientes_get_chave(void *valor) {
-    return (int)valor;
+    PACIENTE *paciente = (PACIENTE *)valor;
+    int id = paciente_get_id(paciente);
+    return id;
 }
 
 void avl_pacientes_apagar_paciente(void *valor) {
@@ -55,10 +55,10 @@ void avl_pacientes_inserir(AVL_PACIENTES *avl_pacientes, PACIENTE *paciente){
 }
 
 void avl_pacientes_apagar(AVL_PACIENTES **avl_pacientes) {
-    if (*avl_pacientes != NULL) {
-        free(*avl_pacientes);
-        *avl_pacientes = NULL;
-    }
+    // apague todos os nós da avl, libere a memória da avl e defina o ponteiro para NULL
+    if (avl_pacientes == NULL || *avl_pacientes == NULL) return;
+    avl_apagar(&((*avl_pacientes)->a));
+    free(*avl_pacientes);
 }
 
 bool avl_pacientes_remover(AVL_PACIENTES* avl_pacientes, int id){
@@ -78,12 +78,12 @@ void avl_pacientes_imprimir(const AVL_PACIENTES *avl_pacientes) {
 }
 
 void avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, int id){
-    PACIENTE* paciente = paciente_criar("", id, 0, false);
-    if(avl_pacientes == NULL || paciente == NULL) return;
-    bool encontrado = avl_buscar(avl_pacientes->a, paciente);
+    if(avl_pacientes == NULL) return;
+
+    bool encontrado = avl_buscar(avl_pacientes->a, id);
     if(encontrado){
-        printf("Paciente com ID %d encontrado na AVL.\n", paciente_get_id(paciente));
+        printf("Paciente com ID %d encontrado na AVL.\n", id);
     } else {
-        printf("Paciente com ID %d não encontrado na AVL.\n", paciente_get_id(paciente));
+        printf("Paciente com ID %d não encontrado na AVL.\n", id);
     }
 }
