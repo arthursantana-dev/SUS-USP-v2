@@ -30,61 +30,64 @@ void* get_inteiro(void* a){
 
 int main()
 {
-    AVL *avl = avl_criar(comparar_inteiros, imprimir_inteiro, apagar_inteiro, get_inteiro);
+    // AVL *avl = avl_criar(comparar_inteiros, imprimir_inteiro, apagar_inteiro, get_inteiro);
 
-    // AVL_PACIENTES *ap = avl_pacientes_criar();
+    AVL_PACIENTES *ap = avl_pacientes_criar();
 
-    // PACIENTE *p1 = paciente_criar("Alice", 5, 4, true);
+    PACIENTE *p1 = paciente_criar("Alice", 5, 4, true);
 
-    // PACIENTE *p2 = paciente_criar("David", 3, 2, false);
+    PACIENTE *p2 = paciente_criar("David", 3, 2, false);
 
-    // avl_pacientes_inserir(ap, p1);
-    // avl_pacientes_inserir(ap, paciente_criar("Bob", 7, 6, false));
-    // avl_pacientes_inserir(ap, paciente_criar("Charlie", 6, 5, true));
+    avl_pacientes_inserir(ap, p1);
+    avl_pacientes_inserir(ap, paciente_criar("Bob", 7, 6, false));
+    avl_pacientes_inserir(ap, paciente_criar("Charlie", 6, 5, true));
 
-    // avl_pacientes_imprimir(ap);
+    avl_pacientes_imprimir(ap);
 
-    // avl_pacientes_buscar(ap, p2);
+    printf("Removendo paciente com ID 5:\n");
+    avl_pacientes_remover(ap, &(int){5});
+
+    avl_pacientes_buscar(ap, 5);
 
     // // Declaração das variáveis
-    int v1 = 50;
-    int v2 = 25;
-    int v3 = 75;
-    int v4 = 12;
-    int v5 = 37;
-    int v6 = 60;
-    int v7 = 90;
-    int v8 = 6;
-    int v9 = 18;
-    int v10 = 43;
-    int v11 = 80;
-    int v12 = 100;
-    int v13 = 31;
-    int v14 = 65;
-    int v15 = 85;
-    int v16 = 33;
+    // int v1 = 50;
+    // int v2 = 25;
+    // int v3 = 75;
+    // int v4 = 12;
+    // int v5 = 37;
+    // int v6 = 60;
+    // int v7 = 90;
+    // int v8 = 6;
+    // int v9 = 18;
+    // int v10 = 43;
+    // int v11 = 80;
+    // int v12 = 100;
+    // int v13 = 31;
+    // int v14 = 65;
+    // int v15 = 85;
+    // int v16 = 33;
 
-    // // Chamadas para forçar todas as rotações (Simples Direita, Dupla E-D, Simples Esquerda, Dupla D-E)
-    avl_inserir(avl, &v1);
-    avl_inserir(avl, &v2);
-    avl_inserir(avl, &v3);
-    avl_inserir(avl, &v4);
-    avl_inserir(avl, &v5);
-    avl_inserir(avl, &v6);
-    avl_inserir(avl, &v7);
-    avl_inserir(avl, &v8); // Força Rotação Simples à Direita (no nó 12)
-    avl_inserir(avl, &v9);
-    avl_inserir(avl, &v10);
-    avl_inserir(avl, &v11);
-    avl_inserir(avl, &v12);
-    avl_inserir(avl, &v13); // Força Rotação Dupla Esquerda-Direita (no nó 37)
-    avl_inserir(avl, &v14); // Força Rotação Simples à Esquerda (no nó 75)
-    avl_inserir(avl, &v15);
-    avl_inserir(avl, &v16); // Força Rotação Dupla Direita-Esquerda (no nó 31)
+    // // // Chamadas para forçar todas as rotações (Simples Direita, Dupla E-D, Simples Esquerda, Dupla D-E)
+    // avl_inserir(avl, &v1);
+    // avl_inserir(avl, &v2);
+    // avl_inserir(avl, &v3);
+    // avl_inserir(avl, &v4);
+    // avl_inserir(avl, &v5);
+    // avl_inserir(avl, &v6);
+    // avl_inserir(avl, &v7);
+    // avl_inserir(avl, &v8); // Força Rotação Simples à Direita (no nó 12)
+    // avl_inserir(avl, &v9);
+    // avl_inserir(avl, &v10);
+    // avl_inserir(avl, &v11);
+    // avl_inserir(avl, &v12);
+    // avl_inserir(avl, &v13); // Força Rotação Dupla Esquerda-Direita (no nó 37)
+    // avl_inserir(avl, &v14); // Força Rotação Simples à Esquerda (no nó 75)
+    // avl_inserir(avl, &v15);
+    // avl_inserir(avl, &v16); // Força Rotação Dupla Direita-Esquerda (no nó 31)
 
-    avl_remover(avl, &v16);
+    // avl_remover(avl, &v16);
 
-    printf("Elementos da AVL em ordem crescente:\n");
+    // printf("Elementos da AVL em ordem crescente:\n");
 
-    avl_imprimir(avl);
+    // avl_imprimir(avl);
 }

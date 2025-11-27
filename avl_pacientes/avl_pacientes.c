@@ -26,12 +26,24 @@ void imprimir_paciente(void *valor) {
     }
 }
 
+int avl_pacientes_get_chave(void *valor) {
+    return (int)valor;
+}
+
+void avl_pacientes_apagar_paciente(void *valor) {
+    PACIENTE *paciente = (PACIENTE *)valor;
+    if (paciente != NULL) {
+        paciente_remover_ponteiro(paciente);
+        free(paciente);
+    }
+}
+
 AVL_PACIENTES* avl_pacientes_criar() {
     AVL_PACIENTES *avl_pacientes = (AVL_PACIENTES*) malloc(sizeof(AVL_PACIENTES));
     if (avl_pacientes != NULL) {
         avl_pacientes->comparar = comparar_ids;
         avl_pacientes->imprimir = imprimir_paciente;
-        avl_pacientes->a = avl_criar(avl_pacientes->comparar, avl_pacientes->imprimir, paciente_remover_ponteiro, paciente_get_id);
+        avl_pacientes->a = avl_criar(avl_pacientes->comparar, avl_pacientes->imprimir, avl_pacientes_apagar_paciente, avl_pacientes_get_chave);
     }
     return avl_pacientes;
 }
@@ -42,11 +54,19 @@ void avl_pacientes_inserir(AVL_PACIENTES *avl_pacientes, PACIENTE *paciente){
     avl_inserir(avl_pacientes->a, paciente);
 }
 
-void avl_pacientes_remover(AVL_PACIENTES **avl_pacientes) {
+void avl_pacientes_apagar(AVL_PACIENTES **avl_pacientes) {
     if (*avl_pacientes != NULL) {
         free(*avl_pacientes);
         *avl_pacientes = NULL;
     }
+}
+
+bool avl_pacientes_remover(AVL_PACIENTES* avl_pacientes, int id){
+    if(avl_pacientes == NULL) return false;
+
+    void* id_ptr = &id;
+
+    return avl_remover(avl_pacientes->a, id_ptr);
 }
 
 void avl_pacientes_imprimir(const AVL_PACIENTES *avl_pacientes) {
@@ -57,7 +77,8 @@ void avl_pacientes_imprimir(const AVL_PACIENTES *avl_pacientes) {
     printf("\n");
 }
 
-void avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, PACIENTE *paciente){
+void avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, int id){
+    PACIENTE* paciente = paciente_criar("", id, 0, false);
     if(avl_pacientes == NULL || paciente == NULL) return;
     bool encontrado = avl_buscar(avl_pacientes->a, paciente);
     if(encontrado){

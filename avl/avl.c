@@ -16,7 +16,7 @@ struct Avl
     void *(*get_chave)(void *valor);
 };
 
-AVL *avl_criar(int (*comparar)(void *a, void *b), void (*imprimir)(void *valor), void (*apagar)(void *valor), void *(*get_chave)(void *valor))
+AVL *avl_criar(int (*comparar)(void *a, void *b), void (*imprimir)(void *valor), void (*apagar)(void *valor), int (*get_chave)(void *valor))
 {
     AVL *avl = (AVL *)malloc(sizeof(AVL));
     if (avl != NULL)
@@ -31,8 +31,10 @@ AVL *avl_criar(int (*comparar)(void *a, void *b), void (*imprimir)(void *valor),
     return avl;
 }
 
-void avl_set_raiz(AVL* avl, NO* no){
-    if(avl == NULL) return;
+void avl_set_raiz(AVL *avl, NO *no)
+{
+    if (avl == NULL)
+        return;
 
     avl->raiz = no;
 }
@@ -261,6 +263,8 @@ NO *avl_remover_auxiliar(AVL *avl, NO *raiz, void *id)
     if (raiz == NULL)
         return NULL;
 
+    printf("%d\n",avl->comparar(id, avl->get_chave(no_get_valor(raiz))));
+
     if (avl->comparar(id, avl->get_chave(no_get_valor(raiz))) == 0)
     {
         if (no_get_esquerda(raiz) == NULL || no_get_direita(raiz) == NULL)
@@ -286,23 +290,35 @@ NO *avl_remover_auxiliar(AVL *avl, NO *raiz, void *id)
     else if (avl->comparar(id, avl->get_chave(no_get_valor(raiz))) == -1)
     {
         no_set_esquerda(raiz, avl_remover_auxiliar(avl, no_get_esquerda(raiz), id));
-    } else if(avl->comparar(id, avl->get_chave(no_get_valor(raiz))) == 1){
+    }
+    else if (avl->comparar(id, avl->get_chave(no_get_valor(raiz))) == 1)
+    {
         no_set_direita(raiz, avl_remover_auxiliar(avl, no_get_direita(raiz), id));
     }
 
-    if(raiz != NULL){
+    if (raiz != NULL)
+    {
         no_atualizar_altura(raiz);
         int fb = no_calcular_fator_balanceamento(raiz);
-        if(fb == -2){
-            if(no_calcular_fator_balanceamento(no_get_direita(raiz)) < 0){
+        if (fb == -2)
+        {
+            if (no_calcular_fator_balanceamento(no_get_direita(raiz)) < 0)
+            {
                 raiz = rodar_esquerda(raiz);
-            } else {
+            }
+            else
+            {
                 raiz = rodar_direita_esquerda(raiz);
             }
-        } else if (fb == 2){
-            if(no_calcular_fator_balanceamento(no_get_esquerda(raiz)) > 0){
+        }
+        else if (fb == 2)
+        {
+            if (no_calcular_fator_balanceamento(no_get_esquerda(raiz)) > 0)
+            {
                 raiz = rodar_direita(raiz);
-            } else {
+            }
+            else
+            {
                 raiz = rodar_esquerda_direita(raiz);
             }
         }
@@ -310,8 +326,9 @@ NO *avl_remover_auxiliar(AVL *avl, NO *raiz, void *id)
     return raiz;
 }
 
-bool avl_remover(AVL* avl, void* id){
-    NO* raiz = avl_get_raiz(avl);
+bool avl_remover(AVL *avl, void *id)
+{
+    NO *raiz = avl_get_raiz(avl);
 
     printf("id: %d\n", id);
 
