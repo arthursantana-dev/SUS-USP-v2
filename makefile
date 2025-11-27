@@ -10,6 +10,8 @@ TARGET := main
 SRCS := main.c \
         avl/avl.c \
         no/no.c \
+		paciente/paciente.c \
+		avl_pacientes/avl_pacientes.c
 
 OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)

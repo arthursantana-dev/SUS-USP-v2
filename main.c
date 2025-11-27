@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "avl_pacientes/avl_pacientes.h"
+#include "paciente/paciente.h"
+
 int comparar_inteiros(void *a, void *b) {
     int int_a = *(int *)a;
     int int_b = *(int *)b;
@@ -12,11 +15,38 @@ int comparar_inteiros(void *a, void *b) {
     else return 0;
 }
 
+void imprimir_inteiro(void *a){
+    printf("\t%d\n", *(int*)a);
+}
+
+void apagar_inteiro(void* a){
+    free(a);
+    a = NULL;
+}
+
+void* get_inteiro(void* a){
+    return a;
+}
+
 int main()
 {
-    AVL *avl = avl_criar(comparar_inteiros);
+    AVL *avl = avl_criar(comparar_inteiros, imprimir_inteiro, apagar_inteiro, get_inteiro);
 
-    // Declaração das variáveis
+    // AVL_PACIENTES *ap = avl_pacientes_criar();
+
+    // PACIENTE *p1 = paciente_criar("Alice", 5, 4, true);
+
+    // PACIENTE *p2 = paciente_criar("David", 3, 2, false);
+
+    // avl_pacientes_inserir(ap, p1);
+    // avl_pacientes_inserir(ap, paciente_criar("Bob", 7, 6, false));
+    // avl_pacientes_inserir(ap, paciente_criar("Charlie", 6, 5, true));
+
+    // avl_pacientes_imprimir(ap);
+
+    // avl_pacientes_buscar(ap, p2);
+
+    // // Declaração das variáveis
     int v1 = 50;
     int v2 = 25;
     int v3 = 75;
@@ -34,7 +64,7 @@ int main()
     int v15 = 85;
     int v16 = 33;
 
-    // Chamadas para forçar todas as rotações (Simples Direita, Dupla E-D, Simples Esquerda, Dupla D-E)
+    // // Chamadas para forçar todas as rotações (Simples Direita, Dupla E-D, Simples Esquerda, Dupla D-E)
     avl_inserir(avl, &v1);
     avl_inserir(avl, &v2);
     avl_inserir(avl, &v3);
@@ -51,6 +81,8 @@ int main()
     avl_inserir(avl, &v14); // Força Rotação Simples à Esquerda (no nó 75)
     avl_inserir(avl, &v15);
     avl_inserir(avl, &v16); // Força Rotação Dupla Direita-Esquerda (no nó 31)
+
+    avl_remover(avl, &v16);
 
     printf("Elementos da AVL em ordem crescente:\n");
 

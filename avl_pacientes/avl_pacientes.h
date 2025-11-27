@@ -1,0 +1,20 @@
+#ifndef AVL_PACIENTES_H
+#define AVL_PACIENTES_H
+
+#include "paciente/paciente.h"
+
+typedef struct Avl_Pacientes AVL_PACIENTES;
+
+AVL_PACIENTES* avl_pacientes_criar();
+
+void avl_pacientes_inserir(AVL_PACIENTES *avl_pacientes, PACIENTE *paciente);
+
+void avl_pacientes_remover(AVL_PACIENTES **avl_pacientes);
+
+void avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, PACIENTE *paciente);
+
+
+
+void avl_pacientes_imprimir(const AVL_PACIENTES *avl_pacientes);
+
+#endif

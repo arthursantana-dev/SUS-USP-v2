@@ -70,7 +70,6 @@ int no_calcular_altura(NO* no) {
 }
 
 int no_get_altura(NO* no){
-    no_set_altura(no, no_calcular_altura(no));
     if(no != NULL){
         return no->altura;
     }
@@ -127,7 +126,9 @@ void no_set_altura(NO* no, int altura){
     }
 }
 
-void no_atualizar_altura(NO* no){
-    if(no == NULL) return;
-    no_set_altura(no, no_calcular_altura(no));
+void no_atualizar_altura(NO* no) {
+    if (no == NULL) return;
+    int altura_esquerda = (no->esquerda != NULL) ? no->esquerda->altura : -1;
+    int altura_direita = (no->direita != NULL) ? no->direita->altura : -1;
+    no->altura = (altura_esquerda > altura_direita ? altura_esquerda : altura_direita) + 1;
 }
