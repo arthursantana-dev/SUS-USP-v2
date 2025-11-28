@@ -81,7 +81,7 @@ void avl_apagar(AVL **avl)
 {
     if (*avl != NULL)
     {
-        avl_apagar_auxiliar(avl, (*avl)->raiz);
+        avl_apagar_auxiliar(*avl, (*avl)->raiz);
         free(*avl);
         *avl = NULL;
     }
@@ -201,8 +201,6 @@ NO *avl_inserir_auxiliar(AVL *avl, NO *no, NO* no_a_ser_inserido)
         }
     }
 
-    printf("\tAltura do nó com valor %d: %d\n", avl->get_chave(no_get_valor(no))), no_get_altura(no);
-
     return no;
 }
 
@@ -237,7 +235,7 @@ bool avl_buscar_auxiliar(AVL *avl, NO *raiz, int valor)
 
 bool avl_buscar(AVL *avl, int valor)
 {
-    if (avl == NULL || valor == NULL)
+    if (avl == NULL || valor == 0)
         return false;
 
     return avl_buscar_auxiliar(avl, avl->raiz, valor);
@@ -332,11 +330,9 @@ NO *avl_remover_auxiliar(AVL *avl, NO *raiz, int id)
     return raiz;
 }
 
-bool avl_remover(AVL *avl, void *id)
+bool avl_remover(AVL *avl, int id)
 {
     NO *raiz = avl_get_raiz(avl);
-
-    printf("id: %d\n", id);
 
     avl_set_raiz(avl, avl_remover_auxiliar(avl, raiz, id));
 

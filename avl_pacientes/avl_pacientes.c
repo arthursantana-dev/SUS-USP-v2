@@ -34,7 +34,6 @@ void avl_pacientes_apagar_paciente(void *valor) {
     PACIENTE *paciente = (PACIENTE *)valor;
     if (paciente != NULL) {
         paciente_remover_ponteiro(paciente);
-        free(paciente);
     }
 }
 
@@ -55,7 +54,6 @@ void avl_pacientes_inserir(AVL_PACIENTES *avl_pacientes, PACIENTE *paciente){
 }
 
 void avl_pacientes_apagar(AVL_PACIENTES **avl_pacientes) {
-    // apague todos os nós da avl, libere a memória da avl e defina o ponteiro para NULL
     if (avl_pacientes == NULL || *avl_pacientes == NULL) return;
     avl_apagar(&((*avl_pacientes)->a));
     free(*avl_pacientes);
@@ -64,9 +62,7 @@ void avl_pacientes_apagar(AVL_PACIENTES **avl_pacientes) {
 bool avl_pacientes_remover(AVL_PACIENTES* avl_pacientes, int id){
     if(avl_pacientes == NULL) return false;
 
-    void* id_ptr = &id;
-
-    return avl_remover(avl_pacientes->a, id_ptr);
+    return avl_remover(avl_pacientes->a, id);
 }
 
 void avl_pacientes_imprimir(const AVL_PACIENTES *avl_pacientes) {

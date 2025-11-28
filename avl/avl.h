@@ -21,6 +21,6 @@ bool avl_buscar(AVL *avl, int valor);
 
 void avl_imprimir(AVL *avl);
 
-bool avl_remover(AVL* avl, void* id);
+bool avl_remover(AVL* avl, int id);
 
 #endif
