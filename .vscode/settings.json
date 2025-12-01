@@ -5,6 +5,7 @@
         "no.h": "c",
         "stdbool.h": "c",
         "avl_pacientes.h": "c",
-        "paciente.h": "c"
+        "paciente.h": "c",
+        "heap.h": "c"
     }
 }

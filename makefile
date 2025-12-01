@@ -11,7 +11,9 @@ SRCS := main.c \
         avl/avl.c \
         no/no.c \
 		paciente/paciente.c \
-		avl_pacientes/avl_pacientes.c
+		avl_pacientes/avl_pacientes.c \
+		heap/heap.c \
+		fila_espera/fila_espera.c \
 
 OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)

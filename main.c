@@ -4,27 +4,35 @@
 #include <stdlib.h>
 #include "avl_pacientes/avl_pacientes.h"
 #include "paciente/paciente.h"
+// #include "heap/heap.h"
+#include "fila_espera/fila_espera.h"
 
-
-int comparar_inteiros(void *a, void *b) {
+int comparar_inteiros(void *a, void *b)
+{
     int int_a = *(int *)a;
     int int_b = *(int *)b;
 
-    if (int_a < int_b) return -1;
-    else if (int_a > int_b) return 1;
-    else return 0;
+    if (int_a < int_b)
+        return -1;
+    else if (int_a > int_b)
+        return 1;
+    else
+        return 0;
 }
 
-void imprimir_inteiro(void *a){
-    printf("\t%d\n", *(int*)a);
+void imprimir_inteiro(void *a)
+{
+    printf("\t%d\n", *(int *)a);
 }
 
-void apagar_inteiro(void* a){
+void apagar_inteiro(void *a)
+{
     free(a);
     a = NULL;
 }
 
-void* get_inteiro(void* a){
+void *get_inteiro(void *a)
+{
     return a;
 }
 
@@ -32,23 +40,42 @@ int main()
 {
     // AVL *avl = avl_criar(comparar_inteiros, imprimir_inteiro, apagar_inteiro, get_inteiro);
 
-    AVL_PACIENTES *ap = avl_pacientes_criar();
+    // AVL_PACIENTES *ap = avl_pacientes_criar();
 
-    PACIENTE *p1 = paciente_criar("Alice", 5, 4, true);
+    FILA_ESPERA *fe = fila_criar(100);
 
-    avl_pacientes_inserir(ap, p1);
-    avl_pacientes_inserir(ap, paciente_criar("Bob", 7, 6, false));
-    avl_pacientes_inserir(ap, paciente_criar("Charlie", 6, 5, true));
+    PACIENTE *p1 = paciente_criar("Alice", 5, 2, true);
+    PACIENTE *p2 = paciente_criar("Bob", 6, 1, false);
+    // PACIENTE *p3 = paciente_criar("Charlie", 6, 5, true);
 
-    avl_pacientes_imprimir(ap);
+    fila_inserir(fe, p1);
+    fila_inserir(fe, p2);
 
-    printf("Removendo paciente com ID 5:\n");
-    int id_busca = 5;
-    avl_pacientes_remover(ap, id_busca);
+    // avl_pacientes_inserir(ap, p1);
+    // avl_pacientes_inserir(ap, p2);
+    // avl_pacientes_inserir(ap, p3);
 
-    avl_pacientes_buscar(ap, 5);
+    fila_imprimir(fe);
 
-    avl_pacientes_apagar(&ap);
+    printf("saiu\n");
+
+    // fila_remover(fe);
+    // fila_remover(fe);
+
+    paciente_remover_ponteiro(p1);
+    paciente_remover_ponteiro(p2);
+
+    fila_apagar(&fe);
+
+    // avl_pacientes_imprimir(ap);
+
+    // printf("Removendo paciente com ID 5:\n");
+    // int id_busca = 5;
+    // avl_pacientes_remover(ap, id_busca);
+
+    // avl_pacientes_buscar(ap, 5);
+
+    // avl_pacientes_apagar(&ap);
     // // Declaração das variáveis
     // int v1 = 50;
     // int v2 = 25;

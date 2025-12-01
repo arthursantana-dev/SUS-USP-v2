@@ -8,7 +8,7 @@ struct Paciente
 {
     char *nome;
     int id;
-    int risco; /* 0-5 (mín - máx)*/
+    int risco; /* 1-5 (máx - mín)*/
     bool esta_em_triagem;
 };
 
