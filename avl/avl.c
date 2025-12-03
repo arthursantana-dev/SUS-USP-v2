@@ -254,6 +254,8 @@ void avl_imprimir_auxiliar(AVL *avl, NO *no)
 
 void avl_imprimir(AVL *avl)
 {
+    if (avl == NULL)
+        return;
     avl_imprimir_auxiliar(avl, avl->raiz);
     printf("\n");
 }
