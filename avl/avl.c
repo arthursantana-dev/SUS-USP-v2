@@ -248,7 +248,6 @@ void avl_imprimir_auxiliar(AVL *avl, NO *no)
 
     avl_imprimir_auxiliar(avl, no_get_esquerda(no));
     avl->imprimir(no_get_valor(no));
-    // printf("\t%d\n\n", no_get_altura(no));
     avl_imprimir_auxiliar(avl, no_get_direita(no));
 }
 

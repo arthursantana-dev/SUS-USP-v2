@@ -38,34 +38,46 @@ int main()
 
     AVL_PACIENTES *ap = avl_pacientes_criar();
 
-    // // FILA_ESPERA *fe = fila_criar(100);
+    FILA_ESPERA *fe = fila_criar(100);
 
     PACIENTE *p1 = paciente_criar("Alice", 5, 2, true);
     PACIENTE *p2 = paciente_criar("Bob", 6, 1, false);
     PACIENTE *p3 = paciente_criar("Charlie", 6, 5, true);
 
-    // // fila_inserir(fe, p1);
-    // // fila_inserir(fe, p2);
+    fila_inserir(fe, p1);
+    fila_inserir(fe, p2);
+    fila_inserir(fe, p3);
+
 
     avl_pacientes_inserir(ap, p1);
     avl_pacientes_inserir(ap, p2);
     avl_pacientes_inserir(ap, p3);
 
-    // fila_imprimir(fe);
+    fila_imprimir(fe);
 
-    // printf("saiu\n");
+    printf("saiu\n\n");
 
-    // // fila_remover(fe);
-    // // fila_remover(fe);
+    fila_remover(fe);
+    fila_remover(fe);
+
+    fila_imprimir(fe);
+
+    fila_apagar(&fe);
+
+    paciente_remover_ponteiro(p1);
+    paciente_remover_ponteiro(p2);
+    paciente_remover_ponteiro(p3);
+
+    avl_pacientes_apagar(&ap);
 
     // paciente_remover_ponteiro(p1);
     // paciente_remover_ponteiro(p2);
 
     // fila_apagar(&fe);
 
-    avl_pacientes_imprimir(ap);
+    // avl_pacientes_imprimir(ap);
 
-    avl_pacientes_apagar(&ap);
+    // avl_pacientes_apagar(&ap);
 
     // printf("Removendo paciente com ID 5:\n");
     // int id_busca = 5;
