@@ -2,6 +2,7 @@
 #include "../avl/avl.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "../paciente/paciente.h"
 
 struct Avl_Pacientes {
@@ -73,8 +74,8 @@ void avl_pacientes_imprimir(const AVL_PACIENTES *avl_pacientes) {
     printf("\n");
 }
 
-void avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, int id){
-    if(avl_pacientes == NULL) return;
+bool avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, int id){
+    if(avl_pacientes == NULL) return false;
 
     bool encontrado = avl_buscar(avl_pacientes->a, id);
     if(encontrado){
@@ -82,6 +83,8 @@ void avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, int id){
     } else {
         printf("Paciente com ID %d não encontrado na AVL.\n", id);
     }
+
+    return encontrado;
 }
 
 void avl_pacientes_percorrer(AVL_PACIENTES *avl_pacientes, void (*funcao)(void *paciente, void *args), void *args)

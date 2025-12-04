@@ -11,7 +11,7 @@ void avl_pacientes_inserir(AVL_PACIENTES *avl_pacientes, PACIENTE *paciente);
 
 void avl_pacientes_apagar(AVL_PACIENTES **avl_pacientes);
 
-void avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, int id);
+bool avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, int id);
 
 bool avl_pacientes_remover(AVL_PACIENTES* avl_pacientes, int id);
 

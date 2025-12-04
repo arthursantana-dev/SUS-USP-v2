@@ -146,22 +146,22 @@ NO *rodar_direita_esquerda(NO *a)
 
 NO *avl_inserir_auxiliar(AVL *avl, NO *no, NO* no_a_ser_inserido)
 {
-    printf("Inserindo valor auxiliar: %d\n", avl->get_chave(no_get_valor(no_a_ser_inserido)));
+    // printf("Inserindo valor auxiliar: %d\n", avl->get_chave(no_get_valor(no_a_ser_inserido)));
 
     if (no == NULL)
     {
-        printf("\tFolha\n");
+        // printf("\tFolha\n");
         no = no_a_ser_inserido;
     }
     else if (avl->comparar(avl->get_chave(no_get_valor(no_a_ser_inserido)), avl->get_chave(no_get_valor(no))) <= 0)
     {
-        printf("\tEsquerda\n");
+        // printf("\tEsquerda\n");
 
         no_set_esquerda(no, avl_inserir_auxiliar(avl, no_get_esquerda(no), no_a_ser_inserido));
     }
     else
     {
-        printf("\tDireita\n");
+        // printf("\tDireita\n");
 
         no_set_direita(no, avl_inserir_auxiliar(avl, no_get_direita(no), no_a_ser_inserido));
     }
@@ -169,19 +169,19 @@ NO *avl_inserir_auxiliar(AVL *avl, NO *no, NO* no_a_ser_inserido)
     no_set_altura(no, 1 + max(no_get_altura(no_get_esquerda(no)), no_get_altura(no_get_direita(no))));
 
     int fb = no_calcular_fator_balanceamento(no);
-    printf("\tFator de balanceamento do nó %d: %d\n", avl->get_chave(no_get_valor(no)), fb);
+    // printf("\tFator de balanceamento do nó %d: %d\n", avl->get_chave(no_get_valor(no)), fb);
 
     if (fb == -2)
     {
-        printf("\tfb filho esquerdo: %d\n", no_calcular_fator_balanceamento(no_get_esquerda(no)));
+        // printf("\tfb filho esquerdo: %d\n", no_calcular_fator_balanceamento(no_get_esquerda(no)));
         if (no_calcular_fator_balanceamento(no_get_esquerda(no)) <= 0)
         {
-            printf("\tRotação Esquerda\n");
+            // printf("\tRotação Esquerda\n");
             no = rodar_esquerda(no);
         }
         else
         {
-            printf("\tRotação Direita-Esquerda\n");
+            // printf("\tRotação Direita-Esquerda\n");
             no = rodar_direita_esquerda(no);
         }
     }
@@ -191,12 +191,12 @@ NO *avl_inserir_auxiliar(AVL *avl, NO *no, NO* no_a_ser_inserido)
         int fb_direita = no_calcular_fator_balanceamento(no_get_direita(no));
         if (fb_direita > 0)
         {
-            printf("\tRotação Direita\n");
+            // printf("\tRotação Direita\n");
             no = rodar_direita(no);
         }
         else
         {
-            printf("\tRotação Esquerda-Direita\n");
+            // printf("\tRotação Esquerda-Direita\n");
             no = rodar_esquerda_direita(no);
         }
     }
@@ -209,7 +209,7 @@ NO *avl_inserir(AVL *avl, void *valor)
     if (avl == NULL || valor == NULL)
         return NULL;
 
-    printf("Inserindo valor: %d\n", *(int *)valor);
+    // printf("Inserindo valor: %d\n", *(int *)valor);
 
     NO* no_a_ser_inserido = no_criar(valor, NULL, NULL, 0, 0);
 
@@ -266,9 +266,9 @@ NO *avl_remover_auxiliar(AVL *avl, NO *raiz, int id)
     if (raiz == NULL)
         return NULL;
 
-    printf("chave raiz: %d\n", avl->get_chave(no_get_valor(raiz)));
+    // printf("chave raiz: %d\n", avl->get_chave(no_get_valor(raiz)));
 
-    printf("%d\n",avl->comparar(id, avl->get_chave(no_get_valor(raiz))));
+    // printf("%d\n",avl->comparar(id, avl->get_chave(no_get_valor(raiz))));
 
     if (avl->comparar(id, avl->get_chave(no_get_valor(raiz))) == 0)
     {
@@ -285,7 +285,8 @@ NO *avl_remover_auxiliar(AVL *avl, NO *raiz, int id)
             }
 
             avl->apagar(no_get_valor(p));
-            no_remover(&p);
+            no_remover_ponteiro(p);
+            p = NULL;
         }
         else
         {

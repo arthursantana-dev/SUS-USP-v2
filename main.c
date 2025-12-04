@@ -1,145 +1,196 @@
-// #include "avl/avl.h"
-#include "no/no.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "avl_pacientes/avl_pacientes.h"
-#include "paciente/paciente.h"
-// #include "heap/heap.h"
 #include "fila_espera/fila_espera.h"
+#include "paciente/paciente.h"
 #include "IO/IO.h"
 
-// int comparar_inteiros(int a, int b)
-// {
-//     if (a < b)
-//         return -1;
-//     else if (a > b)
-//         return 1;
-//     else
-//         return 0;
-// }
+#define ARQUIVO_DADOS "dados_pacientes.dat"
+#define CAPACIDADE_FILA 100
 
-// void imprimir_inteiro(void *a)
-// {
-//     printf("\t%d\n", *(int *)a);
-// }
+// --- Funções Auxiliares de Interface ---
 
-// void apagar_inteiro(void* a)
-// {
-// }
+void limpar_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 
-// int get_inteiro(void *a)
-// {
-//     int value = *(int *)a;
-//     return value;
-// }
+void pausar_tela() {
+    printf("\nPressione ENTER para continuar...");
+    limpar_buffer();
+}
 
-int main()
-{
-    // // AVL *avl = avl_criar(comparar_inteiros, imprimir_inteiro, apagar_inteiro, get_inteiro);
+void ler_string(char *buffer, int tamanho) {
+    fgets(buffer, tamanho, stdin);
+    size_t len = strlen(buffer);
+    if (len > 0 && buffer[len - 1] == '\n') {
+        buffer[len - 1] = '\0';
+    }
+}
 
-    // AVL_PACIENTES *ap = avl_pacientes_criar();
+// --- Funções do Menu ---
 
-    // FILA_ESPERA *fe = fila_criar(100);
+void menu_registrar_paciente(AVL_PACIENTES *avl, FILA_ESPERA *fila) {
+    char nome[100];
+    int id, risco;
 
-    // // PACIENTE *p1 = paciente_criar("Alice", 5, 2, true);
-    // // PACIENTE *p2 = paciente_criar("Bob", 6, 1, false);
-    // // PACIENTE *p3 = paciente_criar("Charlie", 6, 5, true);
+    printf("\n--- Registrar Paciente ---\n");
+    
+    printf("Nome: ");
+    limpar_buffer();
+    ler_string(nome, 100);
 
-    // // avl_pacientes_inserir(ap, p1);
-    // // avl_pacientes_inserir(ap, p2);
-    // // avl_pacientes_inserir(ap, p3);
+    printf("ID (Inteiro unico): ");
+    scanf("%d", &id);
 
-    // IO_LOAD(ap, fe, "dados_pacientes.dat");
+    bool ja_existe = avl_pacientes_buscar(avl, id);
 
-    // // avl_pacientes_imprimir(ap);
+    if(ja_existe) {
+        printf("Erro: Ja existe um paciente cadastrado com o ID %d.\n", id);
+        return;
+    }
 
-    // fila_imprimir(fe);
+    printf("Risco (1-Emergencia ... 5-Nao Urgente): ");
+    scanf("%d", &risco);
 
-    // IO_SAVE(ap, "dados_pacientes.dat");
+    // Validação básica do risco
+    if (risco < 1 || risco > 5) {
+        printf("Risco invalido. Atribuindo 5 (Nao Urgente).\n");
+        risco = 5;
+    }
 
-    // avl_pacientes_apagar(&ap);
+    PACIENTE *p = paciente_criar(nome, id, risco, true);
 
-    // fila_inserir(fe, p1);
-    // fila_inserir(fe, p2);
-    // fila_inserir(fe, p3);
+    if (p != NULL) {
+        avl_pacientes_inserir(avl, p);
+        
+        bool inseriu_fila = fila_inserir(fila, p);
+        
+        if (inseriu_fila) {
+            printf("Paciente cadastrado e inserido na fila com sucesso!\n");
+        } else {
+            printf("Paciente cadastrado, mas a fila de espera esta cheia!\n");
+        }
+    } else {
+        printf("Erro de memoria ao criar paciente.\n");
+    }
+}
 
-    // fila_imprimir(fe);
+void menu_remover_paciente(AVL_PACIENTES *avl) {
+    int id;
+    printf("\n--- Remover Paciente ---\n");
+    printf("Informe o ID do paciente a ser removido: ");
+    scanf("%d", &id);
 
-    // printf("saiu\n\n");
+    bool removeu = avl_pacientes_remover(avl, id);
+    if (removeu) {
+        printf("Paciente removido do sistema.\n");
+    } else {
+        printf("Paciente nao encontrado ou erro na remocao.\n");
+    }
+}
 
-    // fila_remover(fe);
-    // fila_remover(fe);
+void menu_buscar_paciente(AVL_PACIENTES *avl) {
+    int id;
+    printf("\n--- Buscar Paciente ---\n");
+    printf("Informe o ID: ");
+    scanf("%d", &id);
+    
+    avl_pacientes_buscar(avl, id);
+}
 
-    // fila_imprimir(fe);
+void menu_dar_alta(FILA_ESPERA *fila) {
+    printf("\n--- Dar Alta (Atender Proximo) ---\n");
+    
+    if (fila_tamanho(fila) == 0) {
+        printf("A fila esta vazia. Ninguem para atender.\n");
+        return;
+    }
 
-    // fila_apagar(&fe);
+    PACIENTE *p = fila_remover(fila);
+    
+    if (p != NULL) {
+        // Atualiza status: não está mais em triagem
+        set_esta_em_triagem(p, false);
+        
+        printf("Atendendo paciente:\n");
+        printf(" -> Nome: %s\n", paciente_get_nome(p));
+        printf(" -> ID: %d\n", paciente_get_id(p));
+        printf(" -> Risco Original: %d\n", paciente_get_risco(p));
+        printf("Status atualizado: Alta medica / Atendido.\n");
+        // Nota: O paciente continua salvo na AVL (Histórico), apenas saiu da Fila.
+    }
+}
 
-    // avl_pacientes_imprimir(ap);
+// --- Main ---
 
-    // paciente_remover_ponteiro(p1);
-    // paciente_remover_ponteiro(p2);
-    // paciente_remover_ponteiro(p3);
+int main() {
+    AVL_PACIENTES *hospital = avl_pacientes_criar();
+    FILA_ESPERA *fila = fila_criar(CAPACIDADE_FILA);
 
-    // avl_pacientes_apagar(&ap);
+    if (hospital == NULL || fila == NULL) {
+        printf("Erro critico: Falha ao alocar memoria para as estruturas.\n");
+        return 1;
+    }
 
-    // paciente_remover_ponteiro(p1);
-    // paciente_remover_ponteiro(p2);
+    printf("Carregando base de dados...\n");
+    IO_LOAD(hospital, fila, ARQUIVO_DADOS);
 
-    // fila_apagar(&fe);
+    int opcao = 0;
+    do {
+        printf("\n======================================\n");
+        printf("      SISTEMA PRONTO SOCORRO SUS      \n");
+        printf("======================================\n");
+        printf("1. Registrar paciente\n");
+        printf("2. Remover paciente\n");
+        printf("3. Listar pacientes (Base Geral)\n");
+        printf("4. Buscar paciente por ID\n");
+        printf("5. Mostrar fila de espera (Prioridade)\n");
+        printf("6. Dar alta ao paciente (Atender)\n");
+        printf("7. Sair (Salvar e Encerrar)\n");
+        printf("======================================\n");
+        printf("Escolha: ");
+        scanf("%d", &opcao);
 
-    // avl_pacientes_imprimir(ap);
+        switch (opcao) {
+            case 1:
+                menu_registrar_paciente(hospital, fila);
+                break;
+            case 2:
+                menu_remover_paciente(hospital);
+                break;
+            case 3:
+                printf("\n--- Lista Geral de Pacientes (AVL) ---\n");
+                avl_pacientes_imprimir(hospital);
+                break;
+            case 4:
+                menu_buscar_paciente(hospital);
+                break;
+            case 5:
+                printf("\n--- Fila de Espera (Prioridade) ---\n");
+                fila_imprimir(fila);
+                break;
+            case 6:
+                menu_dar_alta(fila);
+                break;
+            case 7:
+                printf("\nSalvando dados e encerrando...\n");
+                IO_SAVE(hospital, ARQUIVO_DADOS);
+                
+                fila_apagar(&fila);
+                avl_pacientes_apagar(&hospital);
+                break;
+            default:
+                printf("\nOpcao invalida!\n");
+        }
 
-    // avl_pacientes_apagar(&ap);
+        if (opcao != 7) {
+            pausar_tela();
+        }
 
-    // printf("Removendo paciente com ID 5:\n");
-    // int id_busca = 5;
-    // avl_pacientes_remover(ap, id_busca);
+    } while (opcao != 7);
 
-    // avl_pacientes_buscar(ap, 5);
-
-    // avl_pacientes_apagar(&ap);
-    // // Declaração das variáveis
-    // int v1 = 50;
-    // int v2 = 25;
-    // int v3 = 75;
-    // int v4 = 12;
-    // int v5 = 37;
-    // int v6 = 60;
-    // int v7 = 90;
-    // int v8 = 6;
-    // int v9 = 18;
-    // int v10 = 43;
-    // int v11 = 80;
-    // int v12 = 100;
-    // int v13 = 31;
-    // int v14 = 65;
-    // int v15 = 85;
-    // int v16 = 33;
-
-    // // // Chamadas para forçar todas as rotações (Simples Direita, Dupla E-D, Simples Esquerda, Dupla D-E)
-    // avl_inserir(avl, &v1);
-    // avl_inserir(avl, &v2);
-    // avl_inserir(avl, &v3);
-    // avl_inserir(avl, &v4);
-    // avl_inserir(avl, &v5);
-    // avl_inserir(avl, &v6);
-    // avl_inserir(avl, &v7);
-    // avl_inserir(avl, &v8); // Força Rotação Simples à Direita (no nó 12)
-    // avl_inserir(avl, &v9);
-    // avl_inserir(avl, &v10);
-    // avl_inserir(avl, &v11);
-    // avl_inserir(avl, &v12);
-    // avl_inserir(avl, &v13); // Força Rotação Dupla Esquerda-Direita (no nó 37)
-    // avl_inserir(avl, &v14); // Força Rotação Simples à Esquerda (no nó 75)
-    // avl_inserir(avl, &v15);
-    // avl_inserir(avl, &v16); // Força Rotação Dupla Direita-Esquerda (no nó 31)
-
-    // avl_remover(avl, &v16);
-
-    // printf("Elementos da AVL em ordem crescente:\n");
-
-    // avl_imprimir(avl);
-
-    // avl_apagar(&avl);
-
+    printf("Sistema encerrado com sucesso.\n");
+    return 0;
 }
