@@ -153,7 +153,7 @@ NO *avl_inserir_auxiliar(AVL *avl, NO *no, NO* no_a_ser_inserido)
         printf("\tFolha\n");
         no = no_a_ser_inserido;
     }
-    else if (avl->comparar(avl->get_chave(no_get_valor(no_a_ser_inserido)), avl->get_chave(no_get_valor(no))) < 0)
+    else if (avl->comparar(avl->get_chave(no_get_valor(no_a_ser_inserido)), avl->get_chave(no_get_valor(no))) <= 0)
     {
         printf("\tEsquerda\n");
 
@@ -174,7 +174,7 @@ NO *avl_inserir_auxiliar(AVL *avl, NO *no, NO* no_a_ser_inserido)
     if (fb == -2)
     {
         printf("\tfb filho esquerdo: %d\n", no_calcular_fator_balanceamento(no_get_esquerda(no)));
-        if (no_calcular_fator_balanceamento(no_get_esquerda(no)) < 0)
+        if (no_calcular_fator_balanceamento(no_get_esquerda(no)) <= 0)
         {
             printf("\tRotação Esquerda\n");
             no = rodar_esquerda(no);
@@ -248,7 +248,7 @@ void avl_imprimir_auxiliar(AVL *avl, NO *no)
 
     avl_imprimir_auxiliar(avl, no_get_esquerda(no));
     avl->imprimir(no_get_valor(no));
-    printf("\t%d\n\n", no_get_altura(no));
+    // printf("\t%d\n\n", no_get_altura(no));
     avl_imprimir_auxiliar(avl, no_get_direita(no));
 }
 
