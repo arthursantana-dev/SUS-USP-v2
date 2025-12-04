@@ -83,3 +83,10 @@ void avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, int id){
         printf("Paciente com ID %d não encontrado na AVL.\n", id);
     }
 }
+
+void avl_pacientes_percorrer(AVL_PACIENTES *avl_pacientes, void (*funcao)(void *paciente, void *args), void *args)
+{
+    if (avl_pacientes == NULL) return;
+    
+    avl_percorrer(avl_pacientes->a, funcao, args);
+}

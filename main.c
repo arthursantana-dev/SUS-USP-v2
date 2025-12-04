@@ -1,4 +1,4 @@
-#include "avl/avl.h"
+// #include "avl/avl.h"
 #include "no/no.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,69 +6,81 @@
 #include "paciente/paciente.h"
 // #include "heap/heap.h"
 #include "fila_espera/fila_espera.h"
+#include "IO/IO.h"
 
-int comparar_inteiros(int a, int b)
-{
-    if (a < b)
-        return -1;
-    else if (a > b)
-        return 1;
-    else
-        return 0;
-}
+// int comparar_inteiros(int a, int b)
+// {
+//     if (a < b)
+//         return -1;
+//     else if (a > b)
+//         return 1;
+//     else
+//         return 0;
+// }
 
-void imprimir_inteiro(void *a)
-{
-    printf("\t%d\n", *(int *)a);
-}
+// void imprimir_inteiro(void *a)
+// {
+//     printf("\t%d\n", *(int *)a);
+// }
 
-void apagar_inteiro(void* a)
-{
-}
+// void apagar_inteiro(void* a)
+// {
+// }
 
-int get_inteiro(void *a)
-{
-    int value = *(int *)a;
-    return value;
-}
+// int get_inteiro(void *a)
+// {
+//     int value = *(int *)a;
+//     return value;
+// }
 
 int main()
 {
-    // AVL *avl = avl_criar(comparar_inteiros, imprimir_inteiro, apagar_inteiro, get_inteiro);
+    // // AVL *avl = avl_criar(comparar_inteiros, imprimir_inteiro, apagar_inteiro, get_inteiro);
 
-    AVL_PACIENTES *ap = avl_pacientes_criar();
+    // AVL_PACIENTES *ap = avl_pacientes_criar();
 
-    FILA_ESPERA *fe = fila_criar(100);
+    // FILA_ESPERA *fe = fila_criar(100);
 
-    PACIENTE *p1 = paciente_criar("Alice", 5, 2, true);
-    PACIENTE *p2 = paciente_criar("Bob", 6, 1, false);
-    PACIENTE *p3 = paciente_criar("Charlie", 6, 5, true);
+    // // PACIENTE *p1 = paciente_criar("Alice", 5, 2, true);
+    // // PACIENTE *p2 = paciente_criar("Bob", 6, 1, false);
+    // // PACIENTE *p3 = paciente_criar("Charlie", 6, 5, true);
 
-    fila_inserir(fe, p1);
-    fila_inserir(fe, p2);
-    fila_inserir(fe, p3);
+    // // avl_pacientes_inserir(ap, p1);
+    // // avl_pacientes_inserir(ap, p2);
+    // // avl_pacientes_inserir(ap, p3);
 
+    // IO_LOAD(ap, fe, "dados_pacientes.dat");
 
-    avl_pacientes_inserir(ap, p1);
-    avl_pacientes_inserir(ap, p2);
-    avl_pacientes_inserir(ap, p3);
+    // // avl_pacientes_imprimir(ap);
 
-    fila_imprimir(fe);
+    // fila_imprimir(fe);
 
-    printf("saiu\n\n");
+    // IO_SAVE(ap, "dados_pacientes.dat");
 
-    fila_remover(fe);
-    fila_remover(fe);
+    // avl_pacientes_apagar(&ap);
 
-    fila_imprimir(fe);
+    // fila_inserir(fe, p1);
+    // fila_inserir(fe, p2);
+    // fila_inserir(fe, p3);
 
-    fila_apagar(&fe);
+    // fila_imprimir(fe);
 
-    paciente_remover_ponteiro(p1);
-    paciente_remover_ponteiro(p2);
-    paciente_remover_ponteiro(p3);
+    // printf("saiu\n\n");
 
-    avl_pacientes_apagar(&ap);
+    // fila_remover(fe);
+    // fila_remover(fe);
+
+    // fila_imprimir(fe);
+
+    // fila_apagar(&fe);
+
+    // avl_pacientes_imprimir(ap);
+
+    // paciente_remover_ponteiro(p1);
+    // paciente_remover_ponteiro(p2);
+    // paciente_remover_ponteiro(p3);
+
+    // avl_pacientes_apagar(&ap);
 
     // paciente_remover_ponteiro(p1);
     // paciente_remover_ponteiro(p2);

@@ -23,4 +23,6 @@ void avl_imprimir(AVL *avl);
 
 bool avl_remover(AVL* avl, int id);
 
+void avl_percorrer(AVL *avl, void (*funcao)(void *dado, void *args), void *args);
+
 #endif

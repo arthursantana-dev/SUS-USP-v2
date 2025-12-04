@@ -339,3 +339,22 @@ bool avl_remover(AVL *avl, int id)
 
     return avl_get_raiz(avl) != NULL;
 }
+
+void avl_percorrer_aux(NO *no, void (*funcao)(void *dado, void *args), void *args)
+{
+    if (no == NULL)
+        return;
+
+    funcao(no_get_valor(no), args);
+
+    avl_percorrer_aux(no_get_esquerda(no), funcao, args);
+    avl_percorrer_aux(no_get_direita(no), funcao, args);
+}
+
+void avl_percorrer(AVL *avl, void (*funcao)(void *dado, void *args), void *args)
+{
+    if (avl == NULL || funcao == NULL)
+        return;
+
+    avl_percorrer_aux(avl->raiz, funcao, args);
+}
