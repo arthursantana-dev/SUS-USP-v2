@@ -102,17 +102,41 @@ void avl_pacientes_percorrer(AVL_PACIENTES *avl_pacientes, void (*funcao)(void *
     avl_percorrer(avl_pacientes->a, funcao, args);
 }
 
-bool avl_busca_id_e_adiciona_procedimento(AVL_PACIENTES *avl_pacientes, int id, char *item)
+bool avl_pacientes_adicionar_procedimento(AVL_PACIENTES *avl_pacientes, int id, char *procedimento)
 {
-    if (avl_pacientes == NULL || item == NULL) return false;
+    if (avl_pacientes == NULL || procedimento == NULL) return false;
 
     PACIENTE *p = avl_pacientes_recuperar(avl_pacientes, id);
     if (p == NULL) {
-        printf("Paciente com ID %d não encontrado.\n", id);
+        printf("Erro: Paciente com ID %d nao encontrado.\n", id);
         return false;
     }
 
-    bool resultado = paciente_adicionar_procedimento(p, item);
+    return paciente_adicionar_procedimento(p, procedimento);
+}
 
-    return resultado;
+bool avl_pacientes_remover_procedimento(AVL_PACIENTES *avl_pacientes, int id)
+{
+    if (avl_pacientes == NULL) return false;
+
+    PACIENTE *p = avl_pacientes_recuperar(avl_pacientes, id);
+    if (p == NULL) {
+        printf("Erro: Paciente com ID %d nao encontrado.\n", id);
+        return false;
+    }
+
+    return paciente_remover_procedimento(p);
+}
+
+void avl_pacientes_listar_procedimentos(AVL_PACIENTES *avl_pacientes, int id)
+{
+    if (avl_pacientes == NULL) return;
+
+    PACIENTE *p = avl_pacientes_recuperar(avl_pacientes, id);
+    if (p == NULL) {
+        printf("Erro: Paciente com ID %d nao encontrado.\n", id);
+        return;
+    }
+
+    paciente_listar_procedimentos(p);
 }

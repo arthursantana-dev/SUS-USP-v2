@@ -87,6 +87,11 @@ void paciente_remover(PACIENTE **paciente)
     if (*paciente == NULL)
         return;
 
+    while(historico_vazio((*paciente)->historico) == false){
+        historico_remover((*paciente)->historico);
+    }
+
+    historico_apagar(&((*paciente)->historico));
 
     free((*paciente)->nome);
     free(*paciente);
@@ -97,6 +102,12 @@ void paciente_remover_ponteiro(PACIENTE* paciente){
     if (paciente == NULL)
         return;
 
+    while(historico_vazio(paciente->historico) == false){
+        historico_remover(paciente->historico);
+    }
+
+    historico_apagar(&(paciente->historico));
+    
     free(paciente->nome);
     free(paciente);
 }

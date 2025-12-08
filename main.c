@@ -123,6 +123,55 @@ void menu_dar_alta(FILA_ESPERA *fila) {
     }
 }
 
+void menu_adicionar_procedimento(AVL_PACIENTES *avl) {
+    int id;
+    char procedimento[200];
+
+    printf("\n--- Adicionar Procedimento Medico ---\n");
+    printf("Informe o ID do paciente: ");
+    scanf("%d", &id);
+    limpar_buffer();
+
+    printf("Descricao do procedimento: ");
+    ler_string(procedimento, 200);
+
+    bool sucesso = avl_pacientes_adicionar_procedimento(avl, id, procedimento);
+    
+    if (sucesso) {
+        printf("Procedimento registrado com sucesso.\n");
+    } else {
+        printf("Falha ao registrar procedimento (Verifique ID ou Memoria).\n");
+    }
+}
+
+
+void menu_remover_procedimento(AVL_PACIENTES *avl) {
+    int id;
+    printf("\n--- Remover Ultimo Procedimento ---\n");
+    printf("Informe o ID do paciente: ");
+    scanf("%d", &id);
+    limpar_buffer();
+
+    bool sucesso = avl_pacientes_remover_procedimento(avl, id);
+
+    if (sucesso) {
+        printf("Ultimo procedimento removido do historico.\n");
+    } else {
+        printf("Nao foi possivel remover (Historico vazio ou ID invalido).\n");
+    }
+}
+
+void menu_listar_procedimentos(AVL_PACIENTES *avl) {
+    int id;
+    printf("\n--- Listar Historico do Paciente ---\n");
+    printf("Informe o ID do paciente: ");
+    scanf("%d", &id);
+    limpar_buffer();
+
+    avl_pacientes_listar_procedimentos(avl, id);
+}
+
+
 // --- Main ---
 
 int main() {
@@ -148,7 +197,12 @@ int main() {
         printf("4. Buscar paciente por ID\n");
         printf("5. Mostrar fila de espera (Prioridade)\n");
         printf("6. Dar alta ao paciente (Atender)\n");
-        printf("7. Sair (Salvar e Encerrar)\n");
+        printf("--------------------------------------\n");
+        printf("7. Adicionar Procedimento (Historico)\n");
+        printf("8. Remover Procedimento (Historico)\n");
+        printf("9. Listar Procedimentos (Historico)\n");
+        printf("--------------------------------------\n");
+        printf("0. Sair (Salvar e Encerrar)\n");
         printf("======================================\n");
         printf("Escolha: ");
         scanf("%d", &opcao);
@@ -175,9 +229,17 @@ int main() {
                 menu_dar_alta(fila);
                 break;
             case 7:
+                menu_adicionar_procedimento(hospital);
+                break;
+            case 8:
+                menu_remover_procedimento(hospital);
+                break;
+            case 9:
+                menu_listar_procedimentos(hospital);
+                break;
+            case 0:
                 printf("\nSalvando dados e encerrando...\n");
-                IO_SAVE(hospital, ARQUIVO_DADOS);
-                
+                IO_SAVE(hospital, ARQUIVO_DADOS);                
                 fila_apagar(&fila);
                 avl_pacientes_apagar(&hospital);
                 break;
@@ -185,11 +247,11 @@ int main() {
                 printf("\nOpcao invalida!\n");
         }
 
-        if (opcao != 7) {
+        if (opcao != 0) {
             pausar_tela();
         }
 
-    } while (opcao != 7);
+    } while (opcao != 0);
 
     printf("Sistema encerrado com sucesso.\n");
     return 0;

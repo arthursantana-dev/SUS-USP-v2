@@ -26,6 +26,10 @@ bool comparar_pacientes(void *p1, void *p2);
 
 bool paciente_adicionar_procedimento(PACIENTE *paciente, char *procedimento);
 
+bool paciente_remover_procedimento(PACIENTE *paciente);
+
+void paciente_listar_procedimentos(PACIENTE *paciente);
+
 HISTORICO *paciente_get_historico(PACIENTE *paciente);
 
 #endif
