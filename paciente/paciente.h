@@ -2,6 +2,7 @@
 #define PACIENTE_H
 
 #include <stdbool.h>
+#include "../historico/historico.h"
 
 typedef struct Paciente PACIENTE;
 
@@ -22,5 +23,9 @@ void set_esta_em_triagem(PACIENTE* paciente, bool status);
 void paciente_remover(PACIENTE **paciente);
 
 bool comparar_pacientes(void *p1, void *p2);
+
+bool paciente_adicionar_procedimento(PACIENTE *paciente, char *procedimento);
+
+HISTORICO *paciente_get_historico(PACIENTE *paciente);
 
 #endif

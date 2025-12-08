@@ -233,6 +233,29 @@ bool avl_buscar_auxiliar(AVL *avl, NO *raiz, int valor)
         return avl_buscar_auxiliar(avl, no_get_direita(raiz), valor);
 }
 
+void* avl_recuperar_auxiliar(AVL *avl, NO *raiz, int valor)
+{
+    if (raiz == NULL)
+        return false;
+
+    int cmp = avl->comparar(valor, avl->get_chave(no_get_valor(raiz)));
+
+    if (cmp == 0)
+        return no_get_valor(raiz);
+    else if (cmp < 0)
+        return avl_recuperar_auxiliar(avl, no_get_esquerda(raiz), valor);
+    else
+        return avl_recuperar_auxiliar(avl, no_get_direita(raiz), valor);
+}
+
+void* avl_recuperar(AVL *avl, int valor)
+{
+    if (avl == NULL)
+        return NULL;
+
+    return avl_recuperar_auxiliar(avl, avl->raiz, valor);
+}
+
 bool avl_buscar(AVL *avl, int valor)
 {
     if (avl == NULL || valor == 0)

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "../paciente/paciente.h"
+#include "../historico/historico.h"
 
 struct Avl_Pacientes {
     int (*comparar)(int a, int b);
@@ -87,9 +88,31 @@ bool avl_pacientes_buscar(AVL_PACIENTES *avl_pacientes, int id){
     return encontrado;
 }
 
+PACIENTE* avl_pacientes_recuperar(AVL_PACIENTES *avl_pacientes, int id) {
+    if (avl_pacientes == NULL) return NULL;
+
+    PACIENTE *paciente = (PACIENTE *)avl_recuperar(avl_pacientes->a, id);
+    return paciente;
+}
+
 void avl_pacientes_percorrer(AVL_PACIENTES *avl_pacientes, void (*funcao)(void *paciente, void *args), void *args)
 {
     if (avl_pacientes == NULL) return;
     
     avl_percorrer(avl_pacientes->a, funcao, args);
+}
+
+bool avl_busca_id_e_adiciona_procedimento(AVL_PACIENTES *avl_pacientes, int id, char *item)
+{
+    if (avl_pacientes == NULL || item == NULL) return false;
+
+    PACIENTE *p = avl_pacientes_recuperar(avl_pacientes, id);
+    if (p == NULL) {
+        printf("Paciente com ID %d não encontrado.\n", id);
+        return false;
+    }
+
+    bool resultado = paciente_adicionar_procedimento(p, item);
+
+    return resultado;
 }

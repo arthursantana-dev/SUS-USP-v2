@@ -19,4 +19,8 @@ void avl_pacientes_imprimir(const AVL_PACIENTES *avl_pacientes);
 
 void avl_pacientes_percorrer(AVL_PACIENTES *avl_pacientes, void (*funcao)(void *paciente, void *args), void *args);
 
+bool avl_busca_id_e_adiciona_procedimento(AVL_PACIENTES *avl_pacientes, int id, char *item);
+
+void avl_pacientes_percorrer(AVL_PACIENTES *avl_pacientes, void (*funcao)(void *paciente, void *args), void *args);
+
 #endif

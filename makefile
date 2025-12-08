@@ -14,7 +14,10 @@ SRCS := main.c \
 		avl_pacientes/avl_pacientes.c \
 		heap/heap.c \
 		fila_espera/fila_espera.c \
-		IO/IO.c
+		IO/IO.c \
+		historico/historico.c \
+		pilha/pilha.c \
+		no_pilha/no.c
 
 OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)
