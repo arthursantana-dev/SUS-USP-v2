@@ -125,7 +125,7 @@ bool comparar_pacientes(void *p1, void *p2)
 
 bool paciente_adicionar_procedimento(PACIENTE *paciente, char *procedimento)
 {
-    if (paciente == NULL || strlen(procedimento) == 0 || paciente->historico == NULL)
+    if (paciente == NULL || strlen(procedimento) == 0 || paciente->historico == NULL || historico_tamanho(paciente->historico) >= 10)
         return false;
 
     historico_inserir(paciente->historico, procedimento);
