@@ -173,30 +173,28 @@ NO *avl_inserir_auxiliar(AVL *avl, NO *no, NO* no_a_ser_inserido)
 
     if (fb == -2)
     {
-        // printf("\tfb filho esquerdo: %d\n", no_calcular_fator_balanceamento(no_get_esquerda(no)));
-        if (no_calcular_fator_balanceamento(no_get_esquerda(no)) <= 0)
+        // CORREÇÃO: Verificar filho DIREITO
+        if (no_calcular_fator_balanceamento(no_get_direita(no)) <= 0)
         {
-            // printf("\tRotação Esquerda\n");
             no = rodar_esquerda(no);
         }
         else
         {
-            // printf("\tRotação Direita-Esquerda\n");
             no = rodar_direita_esquerda(no);
         }
     }
 
     if (fb == 2)
     {
-        int fb_direita = no_calcular_fator_balanceamento(no_get_direita(no));
-        if (fb_direita > 0)
+        // CORREÇÃO: Verificar filho ESQUERDO
+        // E usamos >= 0 para cobrir casos de inserção e remoção corretamente
+        int fb_esquerda = no_calcular_fator_balanceamento(no_get_esquerda(no));
+        if (fb_esquerda >= 0)
         {
-            // printf("\tRotação Direita\n");
             no = rodar_direita(no);
         }
         else
         {
-            // printf("\tRotação Esquerda-Direita\n");
             no = rodar_esquerda_direita(no);
         }
     }
