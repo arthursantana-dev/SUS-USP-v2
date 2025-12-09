@@ -148,6 +148,11 @@ void paciente_listar_procedimentos(PACIENTE *paciente)
         return;
     }
 
+    if(historico_tamanho(paciente->historico) == 0){
+        printf("Nenhum procedimento registrado para o paciente %s (ID: %d).\n\n", paciente->nome, paciente->id);
+        return;
+    }
+
     printf("Procedimentos do paciente %s (ID: %d):\n", paciente->nome, paciente->id);
 
     char *lista_procedimentos = historico_listar(paciente->historico);

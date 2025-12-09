@@ -23,6 +23,7 @@ static void imprimir_paciente(void *valor) {
     PACIENTE *paciente = (PACIENTE *)valor;
     if (paciente != NULL) {
         printf("Paciente ID: %d, Nome: %s, Risco: %d\n", paciente_get_id(paciente), paciente_get_nome(paciente), paciente_get_risco(paciente));
+        paciente_listar_procedimentos(paciente);
     }
 }
 
